@@ -937,13 +937,19 @@
       .lightbox-img-wrap {
         width: 100%;
         max-width: 900px;
-        aspect-ratio: 16/9;
+        height: 75vh; /* Replaces aspect-ratio to adapt safely to screen size */
         background: var(--navy-card2);
         border: 1px solid var(--navy-border2);
         border-radius: 12px;
         overflow: hidden;
         position: relative;
         margin-bottom: 1.25rem;
+      }
+
+      /* ADDED: Forces the inner wrapper to respect the boundaries */
+      #lb-ainai-main, #lb-la3eba-main {
+        width: 100%;
+        height: 100%;
       }
 
       .lightbox-img-wrap img {
