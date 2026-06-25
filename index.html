@@ -949,7 +949,7 @@
       .lightbox-img-wrap img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         display: block;
       }
 
@@ -2324,7 +2324,7 @@
         const counter = document.getElementById(`lb-${id}-counter`);
         counter.textContent = `${idx + 1} / ${s.length}`;
         if (s[idx].src) {
-          main.innerHTML = `<img src="${s[idx].src}" alt="${s[idx].caption}" style="width:100%;height:100%;object-fit:cover;">`;
+          main.innerHTML = `<img src="${s[idx].src}" alt="${s[idx].caption}" style="width:100%;height:100%;object-fit:contain;">`;
         } else {
           main.innerHTML = `<div class="lightbox-placeholder">
       <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
