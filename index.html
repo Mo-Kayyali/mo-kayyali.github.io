@@ -449,6 +449,17 @@
       .t-live {
         color: var(--white);
         margin-top: 2px;
+        display: inline-block;
+        min-height: 1em;
+        line-height: 1.7;
+        vertical-align: top;
+      }
+      /* reserve the row's height so it never collapses when the
+         typewriter text is momentarily empty between phrases —
+         prevents the terminal (and everything below it) from
+         jumping up and down */
+      .t-line-live {
+        min-height: 24px;
       }
       .t-cursor {
         display: inline-block;
@@ -947,7 +958,8 @@
       }
 
       /* ADDED: Forces the inner wrapper to respect the boundaries */
-      #lb-ainai-main, #lb-la3eba-main {
+      #lb-ainai-main,
+      #lb-la3eba-main {
         width: 100%;
         height: 100%;
       }
@@ -1326,12 +1338,242 @@
           padding: 1.5rem;
         }
       }
+
+      /* ============================================================
+         VISUAL ENHANCEMENTS
+         ============================================================ */
+
+      /* scroll progress bar */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        background: linear-gradient(90deg, var(--indigo), #22d3ee, #a855f7);
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.55);
+        z-index: 300;
+        transition: transform 0.08s linear;
+      }
+
+      /* drifting aurora field behind everything */
+      .aurora {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .aurora span {
+        position: absolute;
+        display: block;
+        border-radius: 50%;
+        filter: blur(72px);
+        opacity: 0.55;
+        mix-blend-mode: screen;
+      }
+      .aurora span:nth-child(1) {
+        width: 46vw;
+        height: 46vw;
+        left: -8vw;
+        top: -12vh;
+        background: radial-gradient(
+          circle,
+          rgba(99, 102, 241, 0.38),
+          transparent 60%
+        );
+        animation: aur1 22s ease-in-out infinite;
+      }
+      .aurora span:nth-child(2) {
+        width: 40vw;
+        height: 40vw;
+        right: -6vw;
+        top: 4vh;
+        background: radial-gradient(
+          circle,
+          rgba(34, 211, 238, 0.22),
+          transparent 60%
+        );
+        animation: aur2 27s ease-in-out infinite;
+      }
+      .aurora span:nth-child(3) {
+        width: 38vw;
+        height: 38vw;
+        left: 32vw;
+        top: 34vh;
+        background: radial-gradient(
+          circle,
+          rgba(168, 85, 247, 0.2),
+          transparent 60%
+        );
+        animation: aur3 31s ease-in-out infinite;
+      }
+      @keyframes aur1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(6vw, 5vh) scale(1.15);
+        }
+      }
+      @keyframes aur2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-5vw, 7vh) scale(1.1);
+        }
+      }
+      @keyframes aur3 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-4vw, -6vh) scale(1.2);
+        }
+      }
+
+      /* shimmering hero name */
+      .hero .hero-name {
+        background: linear-gradient(
+          100deg,
+          #eef2ff 0%,
+          #818cf8 28%,
+          #22d3ee 50%,
+          #a855f7 72%,
+          #eef2ff 100%
+        );
+        background-size: 220% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        animation:
+          fadeUp 0.7s ease 0.2s forwards,
+          nameShimmer 9s linear 1s infinite;
+      }
+      @keyframes nameShimmer {
+        to {
+          background-position: 220% center;
+        }
+      }
+
+      /* pointer-tracking spotlight + 3D tilt on project cards */
+      .project-card {
+        --spot: 0;
+        background:
+          radial-gradient(
+            650px circle at var(--mx, 50%) var(--my, 50%),
+            rgba(129, 140, 248, calc(0.16 * var(--spot))),
+            transparent 42%
+          ),
+          var(--navy-card);
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+      .project-card:hover {
+        --spot: 1;
+      }
+      .project-card.featured {
+        background:
+          radial-gradient(
+            650px circle at var(--mx, 50%) var(--my, 50%),
+            rgba(129, 140, 248, calc(0.16 * var(--spot))),
+            transparent 42%
+          ),
+          var(--navy-card);
+      }
+
+      /* scroll-spy active nav link */
+      .nav-links a {
+        position: relative;
+      }
+      .nav-links a.active {
+        color: var(--white);
+      }
+      .nav-links a.active::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -6px;
+        height: 1px;
+        background: var(--indigo);
+        box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+      }
+
+      /* shine sweep on primary button */
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-primary::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -130%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255, 255, 255, 0.28),
+          transparent
+        );
+        transform: skewX(-20deg);
+        transition: left 0.6s ease;
+        pointer-events: none;
+      }
+      .btn-primary:hover::after {
+        left: 150%;
+      }
+
+      /* private-repo tag (YCakes has no public repo) */
+      .proj-private {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: var(--muted);
+        padding: 8px 14px;
+        border: 1px solid var(--navy-border);
+        border-radius: 8px;
+      }
+      .proj-private svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .aurora span {
+          animation: none !important;
+        }
+        .hero .hero-name {
+          animation: fadeUp 0.7s ease 0.2s forwards !important;
+        }
+        .scroll-progress {
+          transition: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+    <div class="aurora" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
     <!-- NAV -->
     <nav id="main-nav">
-      <span class="nav-initials"><span></span></span>
+      <a href="#" class="nav-initials" aria-label="Home">M<span>K</span></a>
       <ul class="nav-links">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#skills">Skills</a></li>
@@ -1533,10 +1775,45 @@
       <div class="lightbox-thumbs" id="lb-la3eba-thumbs"></div>
     </div>
 
+    <!-- YCAKES Lightbox -->
+    <div class="lightbox" id="lb-ycakes">
+      <div class="lightbox-header">
+        <span class="lightbox-title">YCakes — Screenshots</span>
+        <span class="lightbox-counter" id="lb-ycakes-counter">1 / 6</span>
+        <button class="lightbox-close" onclick="closeLightbox('ycakes')">
+          Close ✕
+        </button>
+      </div>
+      <div class="lightbox-img-wrap">
+        <button class="lightbox-nav prev" onclick="lbNav('ycakes', -1)">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div id="lb-ycakes-main"></div>
+        <button class="lightbox-nav next" onclick="lbNav('ycakes', 1)">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+      <div class="lightbox-thumbs" id="lb-ycakes-thumbs"></div>
+    </div>
+
     <!-- HERO -->
     <div class="hero">
       <p class="hero-eyebrow">Cairo, Egypt &nbsp;·&nbsp; Open to work</p>
-      <h1 class="hero-name">Mohamed<br />Kayyali</h1>
+      <h1 class="hero-name">Mohamed<br />El-Kayyali</h1>
       <p class="hero-role">
         Backend <strong>Software Engineer</strong><br />NestJS · .NET ·
         PostgreSQL · Redis
@@ -1571,7 +1848,7 @@
               <span style="color: var(--muted)">--active</span></span
             >
           </div>
-          <div class="t-line">
+          <div class="t-line t-line-live">
             <span class="t-prompt"> </span>
             <span class="t-live" id="typewriter-text"></span
             ><span class="t-cursor"></span>
@@ -1797,60 +2074,76 @@
           <div class="badges">
             <span class="badge badge-indigo">Personal Project</span>
             <span class="badge badge-amber">In Development</span>
+            <span class="badge badge-green">4 Game Modes</span>
           </div>
-          <h3 class="project-title">El-La3eba — Competitive Football Trivia</h3>
+          <h3 class="project-title">
+            El-La3eba — Real-Time Multiplayer Football Trivia
+          </h3>
           <p class="project-sub">
-            Mo-Kayyali/El-La3eba · Full Stack · TypeScript 97.9%
+            Mo-Kayyali/El-La3eba · Full Stack · TypeScript
           </p>
           <p class="project-desc">
-            A real-time competitive online football trivia platform —
-            <strong>1v1 live lobbies</strong>, MMR-based ranked matchmaking, and
-            a global leaderboard. Best-of-3 rounds, 10-second timer per
-            question, 3 strikes per round. Built with WebSockets throughout,
-            Redis atomicity for all shared game state, and a 15-second
-            reconnection grace window so matches survive network drops.
+            A real-time competitive football trivia platform that's grown from a
+            single head-to-head format into
+            <strong>four distinct game modes</strong> — including
+            <strong>Guess The Lineup</strong>, where players reconstruct a
+            club's starting XI on an interactive pitch, and
+            <strong>Top 10</strong>, a ranked-list format with its own
+            ambiguity-resolution rules. All four share one authoritative
+            WebSocket state machine, timer loop, and scoring pipeline.
+            <br /><br />
+            Beyond gameplay: MMR-based ranked matchmaking, a friends system with
+            live presence, a full <strong>spectator mode</strong> so friends can
+            watch live matches, and a custom sound-effects system synced across
+            both clients — down to a 3-second pre-match countdown. Redis backs
+            every piece of shared state with strict atomicity, and a 15-second
+            reconnection grace window keeps matches alive through network drops.
           </p>
           <div class="feature-grid">
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >WebSocket gateway — 15s reconnection grace, guess rate limiting
-                (5 guesses/s), graceful post-match cleanup</span
+                >Four game modes — one shared state machine, timer loop, and
+                scoring pipeline drives every format, each with its own
+                resolution rules</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >MMR matchmaking — Ranked (affects tier), Unrated, and Private
-                lobbies via invite code</span
+                >Guess The Lineup — interactive formation board; players
+                reconstruct a club's XI with mirrored layouts and per-slot
+                position logic</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Friends system — live online status, direct lobby invites to
-                friends in your list</span
+                >Spectator mode — participant-only access control, Redis
+                Set-backed live viewer counts, one-click spectate from
+                Friends</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Global leaderboard — Redis-cached, refreshed every 10 min via
-                cron. Tiers: Bronze / Silver / Gold / Diamond</span
+                >Sound design — full effects system with a synchronized 3-second
+                pre-match countdown across both clients</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Fuzzy player search — pg_trgm + unaccent + levenshtein on name
-                &amp; aliases GIN index</span
+                >MMR matchmaking &amp; social — Ranked, Unrated, and Private
+                lobbies; friends system with live online status</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Redis MULTI/EXEC atomicity on all shared queue ops and game
-                state updates</span
+                >Fuzzy player search — pg_trgm + unaccent + Levenshtein over a
+                GIN index, with per-mode ambiguity resolution and Redis
+                MULTI/EXEC atomicity</span
               >
             </div>
           </div>
@@ -1897,92 +2190,110 @@
           </div>
         </div>
 
-        <!-- TALABAT -->
+        <!-- YCAKES -->
         <div class="project-card reveal reveal-delay-2">
           <p class="project-num">03 / 03</p>
           <div class="badges">
-            <span class="badge badge-indigo">Personal Project</span>
+            <span class="badge badge-indigo">Client Project</span>
+            <span class="badge badge-amber">Launching Sept 2026</span>
+            <span class="badge badge-green">Full Stack</span>
           </div>
-          <h3 class="project-title">Talabat API Clone</h3>
-          <p class="project-sub">
-            Mo-Kayyali/Talabat-API-DotNet · C# / .NET · Clean Architecture
-          </p>
+          <h3 class="project-title">YCakes — Custom Bakery E-Commerce</h3>
+          <p class="project-sub">Private · Next.js Full Stack · TypeScript</p>
           <p class="project-desc">
-            Production-style food delivery REST API built with C# and .NET —
-            focused on <strong>clean architecture done right</strong>. Strict
-            layer separation across Core, Infrastructure, API, and Shared.
-            Generic and specialized repository abstractions, Unit of Work for
-            atomic transactions, and full Swagger documentation across every
-            endpoint.
+            A production storefront I built end-to-end for a real
+            <strong>customized-dessert business</strong>, launching September
+            2026. Customers browse a made-to-order catalog, personalize each
+            cake, and check out in <strong>Arabic or English</strong>.
+            <br /><br />
+            The whole thing is <strong>Next.js from scratch</strong> — no
+            commerce framework — with <strong>Supabase</strong> for data, auth,
+            and storage, and a local payment flow (InstaPay / Vodafone Cash)
+            deliberately isolated behind a provider abstraction so a hosted
+            gateway can drop in later without touching order logic.
           </p>
           <div class="feature-grid">
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >4-layer clean architecture — Core → Infrastructure → API →
-                Shared, hard dependency rules enforced</span
+                >Full-stack Next.js (App Router) — server components + route
+                handlers, no external commerce framework</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Generic IGenericRepository&lt;T&gt; + specialized repos + Unit
-                of Work for atomic multi-repo ops</span
+                >Supabase — PostgreSQL, auth, and storage backing the catalog,
+                orders, and customer accounts</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Specification pattern — query logic encapsulated in spec
-                classes, never scattered</span
+                >Made-to-order model — per-item customization captured at
+                checkout, variants, and pricing rules</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >ASP.NET Core Identity + JWT — role-based auth (Customer,
-                Restaurant, Admin)</span
+                >Manual payment flow — InstaPay / Vodafone Cash with
+                proof-of-payment upload + admin verification</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >AutoMapper DTO layer — domain entities never exposed directly
-                via API</span
+                >Bilingual &amp; RTL — Arabic / English storefront with Tailwind
+                + shadcn/ui and Zustand state</span
               >
             </div>
             <div class="feature-item">
               <div class="fi-dot"></div>
               <span
-                >Global exception middleware — consistent error shape across all
-                endpoints</span
+                >Transactional email — order confirmations and status updates
+                via Resend</span
               >
             </div>
           </div>
           <div class="stack-row">
-            <span class="stack-tag">C#</span><span class="stack-tag">.NET</span
-            ><span class="stack-tag">Entity Framework Core</span>
-            <span class="stack-tag">MS SQL Server</span
-            ><span class="stack-tag">ASP.NET Identity</span
-            ><span class="stack-tag">JWT</span>
-            <span class="stack-tag">AutoMapper</span
-            ><span class="stack-tag">Swagger</span>
+            <span class="stack-tag">Next.js</span
+            ><span class="stack-tag">TypeScript</span
+            ><span class="stack-tag">Supabase</span>
+            <span class="stack-tag">PostgreSQL</span
+            ><span class="stack-tag">Tailwind</span
+            ><span class="stack-tag">shadcn/ui</span>
+            <span class="stack-tag">Zustand</span
+            ><span class="stack-tag">Resend</span>
           </div>
           <div class="project-footer">
             <div class="project-links">
-              <a
-                href="https://github.com/Mo-Kayyali/Talabat-API-DotNet"
-                target="_blank"
-                class="proj-link"
-              >
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                  />
+              <span class="proj-private">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="4" y="11" width="16" height="10" rx="2" />
+                  <path d="M8 11V7a4 4 0 018 0v4" />
                 </svg>
-                View Repo
-              </a>
+                Private client repository
+              </span>
             </div>
+            <button class="screenshots-btn" onclick="openLightbox('ycakes')">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
+              View screenshots
+            </button>
           </div>
         </div>
       </div>
@@ -2018,6 +2329,7 @@
           <p class="skill-group-label">Databases &amp; Storage</p>
           <div class="skill-tags">
             <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">Supabase</span>
             <span class="skill-tag">MS SQL Server</span>
             <span class="skill-tag">Redis</span>
             <span class="skill-tag">Entity Framework</span>
@@ -2318,9 +2630,31 @@
           { src: "assets/la3eba/6.png", caption: "El-La3eba — Round Finished" },
           { src: "assets/la3eba/7.png", caption: "El-La3eba — Game Finished" },
         ],
+        ycakes: [
+          {
+            src: "assets/ycakes/1.png",
+            caption: "YCakes — Storefront (Arabic)",
+          },
+          {
+            src: "assets/ycakes/2.png",
+            caption: "YCakes — Product & Customization",
+          },
+          { src: "assets/ycakes/3.png", caption: "YCakes — Cart" },
+          { src: "assets/ycakes/4.png", caption: "YCakes — Checkout" },
+          { src: "assets/ycakes/5.png", caption: "YCakes — Payment Upload" },
+          {
+            src: "assets/ycakes/6.png",
+            caption: "YCakes — Order Confirmation",
+          },
+          { src: "assets/ycakes/7.png", caption: "YCakes — Admin Orders" },
+        ],
       };
 
-      const lbState = { ainai: { idx: 0 }, la3eba: { idx: 0 } };
+      const lbState = {
+        ainai: { idx: 0 },
+        la3eba: { idx: 0 },
+        ycakes: { idx: 0 },
+      };
 
       function renderLb(id) {
         const s = shots[id],
@@ -2375,7 +2709,7 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           closeModal();
-          ["ainai", "la3eba"].forEach((id) => {
+          ["ainai", "la3eba", "ycakes"].forEach((id) => {
             document.getElementById(`lb-${id}`).classList.remove("open");
             document.body.style.overflow = "";
           });
@@ -2396,6 +2730,100 @@
         { threshold: 0.1 },
       );
       reveals.forEach((r) => io.observe(r));
+
+      /* ── ENHANCEMENTS ── */
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      /* scroll progress */
+      const _sp = document.getElementById("scroll-progress");
+      const _updateProgress = () => {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        _sp.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+      };
+      window.addEventListener("scroll", _updateProgress, { passive: true });
+      _updateProgress();
+
+      /* stat count-up */
+      const statIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target;
+            const span = el.querySelector("span");
+            const suffix = span ? span.outerHTML : "";
+            const target = parseInt(el.textContent, 10) || 0;
+            statIO.unobserve(el);
+            if (prefersReduced) {
+              el.innerHTML = target + suffix;
+              return;
+            }
+            const dur = 1100,
+              t0 = performance.now();
+            const tick = (now) => {
+              const p = Math.min((now - t0) / dur, 1);
+              const eased = 1 - Math.pow(1 - p, 3);
+              el.innerHTML = Math.round(eased * target) + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+        },
+        { threshold: 0.6 },
+      );
+      document.querySelectorAll(".stat-num").forEach((s) => statIO.observe(s));
+
+      /* scroll-spy nav */
+      const _navLinks = document.querySelectorAll(".nav-links a");
+      const _sections = [..._navLinks]
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      const spyIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const id = "#" + e.target.id;
+            _navLinks.forEach((a) =>
+              a.classList.toggle("active", a.getAttribute("href") === id),
+            );
+          });
+        },
+        { rootMargin: "-45% 0px -50% 0px" },
+      );
+      _sections.forEach((s) => spyIO.observe(s));
+
+      /* pointer-tracking spotlight + subtle 3D tilt */
+      const _fine = window.matchMedia(
+        "(hover: hover) and (pointer: fine)",
+      ).matches;
+      if (_fine && !prefersReduced) {
+        document.querySelectorAll(".project-card").forEach((card) => {
+          card.addEventListener("pointermove", (e) => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width;
+            const y = (e.clientY - r.top) / r.height;
+            card.style.setProperty("--mx", x * 100 + "%");
+            card.style.setProperty("--my", y * 100 + "%");
+            const rx = (0.5 - y) * 3.5;
+            const ry = (x - 0.5) * 3.5;
+            card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+          });
+          card.addEventListener("pointerleave", () => {
+            card.style.transform = "";
+          });
+        });
+      }
+
+      /* arrow-key navigation inside an open lightbox */
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        const open = ["ainai", "la3eba", "ycakes"].find((id) =>
+          document.getElementById(`lb-${id}`).classList.contains("open"),
+        );
+        if (open) lbNav(open, e.key === "ArrowRight" ? 1 : -1);
+      });
     </script>
   </body>
 </html>
